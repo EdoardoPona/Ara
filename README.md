@@ -2,7 +2,7 @@
 
 ## Overview
 Ara is a script / api to transcribe :writing_hand: and diarize :notebook: audio. 
-The typical use case for this is transcribing audio from interviews, podcasts and anythin where multiple people are speaking.
+The typical use case for this is transcribing audio from interviews, podcasts and anything where multiple people are speaking.
 The output is 'easy' to read (if you like .txt files), formatted so that speakers are clear for each segment. 
 
 It uses [Whisper](https://github.com/openai/whisper) to transcribe the audio into text. 
