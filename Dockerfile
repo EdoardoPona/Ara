@@ -20,10 +20,9 @@ RUN pip install git+https://github.com/openai/whisper.git
 RUN apt update -y && apt install ffmpeg -y
 RUN pip install setuptools-rust
 
-
 # test imports and download models 
-# RUN python3 -c "import pyannote.audio" 
-# RUN python3 -c "import whisper; whisper.load_model(\"base\")" 
+RUN python3 -c "import pyannote.audio" 
+RUN python3 -c "import whisper; whisper.load_model(\"base\")" 
 
 RUN pip install fastapi
 RUN pip install "uvicorn[standard]"
