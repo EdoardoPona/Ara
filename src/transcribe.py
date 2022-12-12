@@ -4,11 +4,30 @@ from pyannote.audio import Pipeline
 import os 
 
 
-def transcribe(file_name: str, verbose=False):
+def transcribe(file_name: str, verbose=False, language=None):
     print('Transcribing')
     model = whisper.load_model("base")
     file_name = 'sample_data/' +file_name 
-    result = model.transcribe(file_name, verbose=verbose)
+#
+#    # load audio and pad/trim it to fit 30 seconds
+#    audio = whisper.load_audio(file_name)
+#    audio = whisper.pad_or_trim(audio)
+#
+#    # make log-Mel spectrogram and move to the same device as the model
+#    mel = whisper.log_mel_spectrogram(audio).to(model.device)
+#
+#    if language is None:
+#        _, probs = model.detect_language(mel)
+#        langauge = max(probs, key=probs.get)
+#        print(f"Detected language: {language}")
+#
+#    # decode the audio
+#    options = whisper.DecodingOptions(language=language)
+#    result = whisper.decode(model, mel, options).text
+#
+
+    result = model.transcribe(file_name, verbose=verbose, language='French')
+
     segments = [{'start': r['start'], 'end': r['end'], 'text': r['text']} for r in result['segments']]
     print('Diarizing') 
     pipeline = Pipeline.from_pretrained(
@@ -17,8 +36,32 @@ def transcribe(file_name: str, verbose=False):
     )
     # TODO make this verbose as well 
     diarization = pipeline(file_name) 
+    print('through pipeline')
     speaker_times = listen.collapse_turns(diarization) 
     matched_output = listen.match_speakers(speaker_times, segments)
     return matched_output
 
+ 
+if __name__=='__main__':
+    import sys 
+    import json 
+
+    file_name = sys.argv[1]
+    save_path = sys.argv[2]
+ 
+    res = transcribe(file_name, verbose=True, language=None)
+ 
+        # by default saves this formatted 
+    with open(save_path, 'w') as f:
+        for l in res:
+            start = int(l['start'])
+            f.write('START {}:{}\n'.format(start//60, int(start%60)))
+            f.write('SPEAKER {}\n'.format(l['speaker']))
+            f.write('TEXT\n')
+            f.write(l['text'])
+            f.write('\n\n')
+ 
+    jres = json.dumps(res)
+    with open(save_path, 'w') as f:
+        f.write(jres)
 
