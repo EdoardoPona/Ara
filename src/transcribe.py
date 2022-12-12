@@ -1,4 +1,4 @@
-import src.listen as listen
+import listen 
 import whisper
 from pyannote.audio import Pipeline
 import os 
@@ -7,7 +7,6 @@ import os
 def transcribe(file_name: str, verbose=False, language=None):
     print('Transcribing')
     model = whisper.load_model("base")
-    file_name = 'sample_data/' +file_name 
 #
 #    # load audio and pad/trim it to fit 30 seconds
 #    audio = whisper.load_audio(file_name)
@@ -25,34 +24,60 @@ def transcribe(file_name: str, verbose=False, language=None):
 #    options = whisper.DecodingOptions(language=language)
 #    result = whisper.decode(model, mel, options).text
 #
-
-    result = model.transcribe(file_name, verbose=verbose, language='French')
-
+    result = model.transcribe(file_name, verbose=verbose, language=language)
     segments = [{'start': r['start'], 'end': r['end'], 'text': r['text']} for r in result['segments']]
+
     print('Diarizing') 
     pipeline = Pipeline.from_pretrained(
         "pyannote/speaker-diarization",
 	    use_auth_token=os.getenv('HUGGINGFACE_TOKEN')
     )
-    # TODO make this verbose as well 
+
+    # NOTE diarization does not currently work in languages other than English 
+    # TODO make this verbose as well
     diarization = pipeline(file_name) 
-    print('through pipeline')
+    
     speaker_times = listen.collapse_turns(diarization) 
     matched_output = listen.match_speakers(speaker_times, segments)
     return matched_output
 
  
 if __name__=='__main__':
-    import sys 
     import json 
+    import argparse
 
-    file_name = sys.argv[1]
-    save_path = sys.argv[2]
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-lang",
+        '--language',
+        type=str,
+        default='English',
+        help='Language for trascription. Diarization supports only English'
+    )
+    parser.add_argument(
+        "-i",
+        '--input_filename',
+        type=str,
+        default='sample_data/input.wav',
+        help='Input audio file path'
+    )
+    parser.add_argument(
+        "-o",
+        '--output_filename',
+        type=str,
+        default='output/output.txt',
+        help='Output txt file path'
+    )
  
-    res = transcribe(file_name, verbose=True, language=None)
+    args, _ = parser.parse_known_args()
+    language = args.language
+    input_filename = args.input_filename
+    output_filename = args.output_filename
  
-        # by default saves this formatted 
-    with open(save_path, 'w') as f:
+    res = transcribe(input_filename, verbose=True, language=language)
+ 
+    # by default saves this formatted 
+    with open(output_filename, 'w') as f:
         for l in res:
             start = int(l['start'])
             f.write('START {}:{}\n'.format(start//60, int(start%60)))
@@ -62,6 +87,6 @@ if __name__=='__main__':
             f.write('\n\n')
  
     jres = json.dumps(res)
-    with open(save_path, 'w') as f:
+    with open(output_filename, 'w') as f:
         f.write(jres)
 
