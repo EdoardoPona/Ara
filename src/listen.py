@@ -27,7 +27,6 @@ def match_speakers(speaker_times, segments):
         'text': ''
     }] 
 
-
     for s in segments:
         if s['end'] <= matched[-1]['end']:
             matched[-1]['text'] += s['text'] + ' '
