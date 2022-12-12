@@ -1,5 +1,3 @@
-import sys
-import whisper
 from pyannote.audio import Pipeline
 
 # TODO parameter typing 
@@ -44,25 +42,3 @@ def match_speakers(speaker_times, segments):
                 'text': s['text']
             })
     return matched
-
-
-
-# if __name__ == '__main__':
-
-#     # file_path = 'sample_data/interview.wav'
-#     file_path = sys.argv[1]
-
-#     print('transcribing')
-#     model = whisper.load_model("base")
-#     result = model.transcribe(file_path)
-#     segments = [{'start': r['start'], 'end': r['end'], 'text': r['text']} for r in result['segments']]
-
-#     print('diarizing') 
-#     pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization")
-#     diarization = pipeline(file_path)
-
-#     speaker_times = collapse_turns(diarization) 
-#     matched_output = match_speakers(speaker_times, segments)
-#     print(matched_output)
-
-
