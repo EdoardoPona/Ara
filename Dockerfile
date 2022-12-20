@@ -33,4 +33,5 @@ COPY output output
 COPY main.py main.py
 COPY src src
 
+EXPOSE 80 
 CMD uvicorn main:app --host 0.0.0.0 --port 80

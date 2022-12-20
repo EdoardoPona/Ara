@@ -28,3 +28,7 @@ curl 127.0.0.1:8000/transcribe/sample_data.interview.wav
 This can be useful for interacting with it through Docker, or deploying the code. 
 
 The repo comes with a Dockerfile, which makes it easier to deploy in a containerised way. 
+build the docker, then run like so
+```
+sudo docker run -p 80:80 --gpus all <CONTAINER NAME>
+```
