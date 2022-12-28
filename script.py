@@ -1,4 +1,4 @@
-from src.transcribe import transcribe 
+from ara.transcribe import transcribe 
 import json 
 import argparse
 

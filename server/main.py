@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.transcribe import transcribe 
+from ara.transcribe import transcribe 
 
 app = FastAPI()
 

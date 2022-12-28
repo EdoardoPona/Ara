@@ -1,8 +1,9 @@
-import src.listen as listen 
+import ara.listen as listen 
 import whisper
 from pyannote.audio import Pipeline
 import os 
 
+print('heyy updated')
 
 def transcribe(file_name: str, verbose=False, language=None):
     print('Transcribing')

@@ -1,4 +1,6 @@
 __pycache__/
+*.egg*
+ara_image.tar
 .ipynb_checkpoints/
 output/
 sample_data/

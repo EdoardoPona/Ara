@@ -1,0 +1,1 @@
+python script.py -i sample_data/interview.wav -o output/interview.txt
