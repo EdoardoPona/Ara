@@ -4,3 +4,4 @@ ara_image.tar
 .ipynb_checkpoints/
 output/
 sample_data/
+*.wav

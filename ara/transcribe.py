@@ -3,11 +3,13 @@ import whisper
 from pyannote.audio import Pipeline
 import os 
 
-print('heyy updated')
-
-def transcribe(file_name: str, verbose=False, language=None):
+def transcribe(file_name: str, verbose=False, language=None, model_path=None):
     print('Transcribing')
-    model = whisper.load_model("base")
+    if model_path is None:
+        model = whisper.load_model("base")
+    else:
+        model = whisper.load_model(model_path)
+
 #
 #    # load audio and pad/trim it to fit 30 seconds
 #    audio = whisper.load_audio(file_name)
