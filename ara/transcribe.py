@@ -8,9 +8,10 @@ def transcribe(
         verbose=False, 
         language=None, 
         transcript_model_path=None, 
-        pyannote_cache_dir=None
+        pyannote_pipeline_config=None
     ):
-    print('Transcribing')
+    if verbose:
+        print('Transcribing')
     if transcript_model_path is None:
         model = whisper.load_model("base")
     else:
@@ -19,12 +20,17 @@ def transcribe(
     result = model.transcribe(file_name, verbose=verbose, language=language)
     segments = [{'start': r['start'], 'end': r['end'], 'text': r['text']} for r in result['segments']]
 
-    print('Diarizing') 
-    pipeline = Pipeline.from_pretrained(
-        "pyannote/speaker-diarization",
-	    use_auth_token=os.getenv('HUGGINGFACE_TOKEN'),
-        cache_dir=pyannote_cache_dir
-    )
+    if verbose:
+        print('Diarizing') 
+    if pyannote_pipeline_config:
+        pipeline = Pipeline.from_pretrained(
+            pyannote_pipeline_config, 
+        )
+    else:
+        pipeline = Pipeline.from_pretrained(
+            "pyannote/speaker-diarization",
+	        use_auth_token=os.getenv('HUGGINGFACE_TOKEN'),
+        )
 
     # NOTE diarization does not currently work in languages other than English 
     # TODO make this verbose as well
