@@ -5,3 +5,4 @@ ara_image.tar
 output/
 sample_data/
 *.wav
+models/

@@ -30,7 +30,11 @@ language = args.language
 input_filename = args.input_filename
 output_filename = args.output_filename
 
-res = transcribe(input_filename, verbose=True, language=language)
+res = transcribe(
+	input_filename, 
+	verbose=True, 
+	language=language, 
+)
 
 # by default saves this formatted 
 with open(output_filename, 'w') as f:

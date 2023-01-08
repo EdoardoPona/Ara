@@ -8,7 +8,8 @@ def transcribe(
         verbose=False, 
         language=None, 
         transcript_model_path=None, 
-        pyannote_pipeline_config=None
+        pyannote_pipeline_config=None,
+        pyannote_cache_dir=None,
     ):
     if verbose:
         print('Transcribing')
